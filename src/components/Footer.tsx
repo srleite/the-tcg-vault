@@ -30,7 +30,7 @@ export function Footer() {
           <ul className="space-y-2 text-sm text-muted-foreground">
             <li><Link to="/auctions" className="hover:text-gold">Leilões ativos</Link></li>
             <li><Link to="/about" className="hover:text-gold">Sobre nós</Link></li>
-            <li><Link to="/signup" className="hover:text-gold">Vender no Arcanum</Link></li>
+            <li><Link to="/signup" className="hover:text-gold">Vender no CardLab</Link></li>
           </ul>
         </div>
         <div>
