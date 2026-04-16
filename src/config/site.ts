@@ -4,11 +4,11 @@
  */
 
 export const siteConfig = {
-  name: "Arcanum",
+  name: "CardLab",
   tagline: "Leilões de TCGs",
   description:
     "A casa de leilões definitiva para colecionadores de Magic, Pokémon, One Piece e muito mais.",
-  contactEmail: "contato@arcanum.gg",
+  contactEmail: "contato@cardlab.gg",
 };
 
 export type Game = {

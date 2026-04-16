@@ -44,7 +44,7 @@ function LoginPage() {
             <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-gold shadow-gold mb-3">
               <Gavel className="h-6 w-6 text-gold-foreground" />
             </div>
-            <h1 className="font-display text-2xl font-bold">Entrar no Arcanum</h1>
+            <h1 className="font-display text-2xl font-bold">Entrar no CardLab</h1>
             <p className="text-sm text-muted-foreground mt-1">Acesse sua conta para dar lances ou criar leilões.</p>
           </div>
 
