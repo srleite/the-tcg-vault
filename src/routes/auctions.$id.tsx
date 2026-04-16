@@ -112,7 +112,14 @@ function AuctionDetailPage() {
             <Badge variant="outline" className="border-gold/40 text-gold">{game?.name ?? auction.game}</Badge>
             <h1 className="font-display text-4xl font-bold mt-3">{auction.card_name}</h1>
             <p className="text-sm text-muted-foreground mt-2">
-              Vendido por <span className="text-gold">{shopName}</span>
+              Vendido por{" "}
+              <Link
+                to="/shop/$id"
+                params={{ id: auction.shop_id }}
+                className="text-gold hover:underline"
+              >
+                {shopName}
+              </Link>
             </p>
 
             <Card className="p-6 mt-6 border-gold/30">
