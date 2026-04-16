@@ -63,14 +63,6 @@ export const games: Game[] = [
     sampleCard: "Jinx",
     color: "oklch(0.6 0.18 200)",
   },
-  {
-    slug: "gatcg",
-    name: "Grand Archive",
-    tagline: "Aventuras épicas",
-    api: "gatcg",
-    sampleCard: "Lorraine",
-    color: "oklch(0.65 0.15 145)",
-  },
 ];
 
 export const getGame = (slug: string) => games.find((g) => g.slug === slug);
