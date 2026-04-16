@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { games } from "@/config/site";
+import { mockAuctions } from "@/lib/mockAuctions";
 import { Clock, Gavel } from "lucide-react";
 
 type SearchParams = { game?: string };
@@ -36,7 +37,19 @@ function AuctionsPage() {
     let q = supabase.from("auctions").select("*").order("created_at", { ascending: false });
     if (gameFilter) q = q.eq("game", gameFilter);
     q.then(({ data }) => {
-      setAuctions((data as Auction[]) || []);
+      const real = (data as Auction[]) || [];
+      const mocks: Auction[] = mockAuctions
+        .filter((m) => !gameFilter || m.game === gameFilter)
+        .map((m) => ({
+          id: m.id,
+          game: m.game,
+          card_name: m.card_name,
+          card_image_url: m.card_image_url,
+          current_bid: m.current_bid,
+          starting_price: m.starting_price,
+          ends_at: m.ends_at,
+        }));
+      setAuctions([...real, ...mocks]);
       setLoading(false);
     });
   }, [gameFilter]);
