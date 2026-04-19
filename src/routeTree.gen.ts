@@ -18,6 +18,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ShopIdRouteImport } from './routes/shop.$id'
 import { Route as GamesSlugRouteImport } from './routes/games.$slug'
 import { Route as AuctionsIdRouteImport } from './routes/auctions.$id'
+import { Route as ApiOnepieceImageRouteImport } from './routes/api.onepiece-image'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -64,6 +65,11 @@ const AuctionsIdRoute = AuctionsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AuctionsRoute,
 } as any)
+const ApiOnepieceImageRoute = ApiOnepieceImageRouteImport.update({
+  id: '/api/onepiece-image',
+  path: '/api/onepiece-image',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -72,6 +78,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/api/onepiece-image': typeof ApiOnepieceImageRoute
   '/auctions/$id': typeof AuctionsIdRoute
   '/games/$slug': typeof GamesSlugRoute
   '/shop/$id': typeof ShopIdRoute
@@ -83,6 +90,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/api/onepiece-image': typeof ApiOnepieceImageRoute
   '/auctions/$id': typeof AuctionsIdRoute
   '/games/$slug': typeof GamesSlugRoute
   '/shop/$id': typeof ShopIdRoute
@@ -95,6 +103,7 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/api/onepiece-image': typeof ApiOnepieceImageRoute
   '/auctions/$id': typeof AuctionsIdRoute
   '/games/$slug': typeof GamesSlugRoute
   '/shop/$id': typeof ShopIdRoute
@@ -108,6 +117,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/login'
     | '/signup'
+    | '/api/onepiece-image'
     | '/auctions/$id'
     | '/games/$slug'
     | '/shop/$id'
@@ -119,6 +129,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/login'
     | '/signup'
+    | '/api/onepiece-image'
     | '/auctions/$id'
     | '/games/$slug'
     | '/shop/$id'
@@ -130,6 +141,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/login'
     | '/signup'
+    | '/api/onepiece-image'
     | '/auctions/$id'
     | '/games/$slug'
     | '/shop/$id'
@@ -142,6 +154,7 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
+  ApiOnepieceImageRoute: typeof ApiOnepieceImageRoute
   GamesSlugRoute: typeof GamesSlugRoute
   ShopIdRoute: typeof ShopIdRoute
 }
@@ -211,6 +224,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuctionsIdRouteImport
       parentRoute: typeof AuctionsRoute
     }
+    '/api/onepiece-image': {
+      id: '/api/onepiece-image'
+      path: '/api/onepiece-image'
+      fullPath: '/api/onepiece-image'
+      preLoaderRoute: typeof ApiOnepieceImageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -233,6 +253,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
+  ApiOnepieceImageRoute: ApiOnepieceImageRoute,
   GamesSlugRoute: GamesSlugRoute,
   ShopIdRoute: ShopIdRoute,
 }
