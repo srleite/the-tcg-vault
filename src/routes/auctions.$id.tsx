@@ -189,6 +189,17 @@ function AuctionDetailPage() {
                   <Gavel className="h-4 w-4 mr-2" /> Dar lance
                 </Button>
               </div>
+              {isMock && (
+                <Link
+                  to="/checkout/$id"
+                  params={{ id: auction.id }}
+                  className="block mt-3"
+                >
+                  <Button variant="outline" className="w-full border-gold/40 text-gold hover:bg-gold/10">
+                    Finalizar arremate (exemplo)
+                  </Button>
+                </Link>
+              )}
             </Card>
 
             {bids.length > 0 && (
