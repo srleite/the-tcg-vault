@@ -1,4 +1,4 @@
-import riftboundJinx from "@/assets/riftbound-jinx.jpg";
+import riftboundJinx from "@/assets/riftbound-jinx.png";
 
 /**
  * LEILÕES DE EXEMPLO (MOCK)
