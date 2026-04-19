@@ -1,9 +1,12 @@
 /**
  * Wrapper para APIs públicas de imagens de cartas.
- * - Scryfall: Magic
- * - GATCG: Grand Archive
- * - Fallback: imagem genérica (pokemontcg.io para Pokémon poderia ser adicionada)
+ * - Scryfall: Magic (público, sem chave)
+ * - GATCG: Grand Archive (apenas referência interna p/ artes)
+ * - One Piece: apitcg.com via server function (chave protegida)
+ * - Fallback: imagem genérica
  */
+
+import { searchOnePieceCards } from "@/server/onepiece.functions";
 
 export type CardImage = {
   name: string;
@@ -54,14 +57,25 @@ export async function searchGatcg(query: string): Promise<CardImage[]> {
   }
 }
 
+export async function searchOnePiece(query: string): Promise<CardImage[]> {
+  try {
+    const result = await searchOnePieceCards({ data: { query } });
+    if (result.error) return [];
+    return result.cards
+      .filter((c) => c.imageUrl)
+      .map((c) => ({ name: c.name, imageUrl: c.imageUrl, setName: c.setName }));
+  } catch {
+    return [];
+  }
+}
+
 export async function searchCards(
-  api: "scryfall" | "gatcg" | "static",
+  api: "scryfall" | "gatcg" | "onepiece" | "static",
   query: string
 ): Promise<CardImage[]> {
   if (api === "scryfall") return searchScryfall(query);
   if (api === "gatcg") return searchGatcg(query);
+  if (api === "onepiece") return searchOnePiece(query);
   // static fallback — single placeholder
-  return [
-    { name: query, imageUrl: FALLBACK_IMG },
-  ];
+  return [{ name: query, imageUrl: FALLBACK_IMG }];
 }
