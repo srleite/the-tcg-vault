@@ -62,7 +62,8 @@ function AuctionsPage() {
             <span className="text-gradient-gold">Leilões</span> ativos
           </h1>
           <p className="text-muted-foreground mt-2">
-            {auctions.length} leilão{auctions.length === 1 ? "" : "ões"} disponíveis
+            {auctions.length}{" "}
+            {auctions.length === 1 ? "leilão disponível" : "leilões disponíveis"}
           </p>
           <div className="flex flex-wrap gap-2 mt-6">
             <Link
