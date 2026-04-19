@@ -1,3 +1,5 @@
+import riftboundJinx from "@/assets/riftbound-jinx.jpg";
+
 /**
  * LEILÕES DE EXEMPLO (MOCK)
  * Usados apenas para apresentação/prints. Não persistem no banco.
@@ -106,8 +108,7 @@ export const mockAuctions: MockAuction[] = [
     id: "mock-riftbound-1",
     game: "riftbound",
     card_name: "Jinx - Loose Cannon",
-    card_image_url:
-      "https://images.unsplash.com/photo-1606503153255-59d8b8b25d56?w=600&q=80",
+    card_image_url: riftboundJinx,
     description:
       "Champion card do set inaugural de Riftbound. Arte alternativa exclusiva de pré-venda.",
     current_bid: 680,
