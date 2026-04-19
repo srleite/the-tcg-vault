@@ -13,6 +13,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { supabase } from "@/integrations/supabase/client";
 import { games, getGame } from "@/config/site";
 import { searchCards, type CardImage } from "@/lib/cardApi";
+import { getOnePieceImageUrl } from "@/lib/onePieceImage";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 import { Plus, Search, Trash2 } from "lucide-react";
@@ -171,7 +172,7 @@ function DashboardPage() {
                           selected?.imageUrl === c.imageUrl ? "border-gold" : "border-transparent hover:border-gold/50"
                         }`}
                       >
-                        <img src={c.imageUrl} alt={c.name} className="w-full aspect-[3/4] object-cover" />
+                        <img src={getOnePieceImageUrl(c.imageUrl)} alt={c.name} className="w-full aspect-[3/4] object-cover" />
                         <div className="text-[10px] truncate p-1">{c.name}</div>
                       </button>
                     ))}
@@ -180,7 +181,7 @@ function DashboardPage() {
 
                 {selected && (
                   <div className="flex gap-3 items-center p-3 border border-gold/40 rounded">
-                    <img src={selected.imageUrl} alt={selected.name} className="h-16 w-12 object-cover rounded" />
+                    <img src={getOnePieceImageUrl(selected.imageUrl)} alt={selected.name} className="h-16 w-12 object-cover rounded" />
                     <div className="text-sm"><span className="text-gold">Selecionada:</span> {selected.name}</div>
                   </div>
                 )}
@@ -217,7 +218,7 @@ function DashboardPage() {
               <Card key={a.id} className="overflow-hidden border-border/60">
                 <div className="aspect-[3/4] bg-muted">
                   {a.card_image_url && (
-                    <img src={a.card_image_url} alt={a.card_name} className="w-full h-full object-cover" />
+                    <img src={getOnePieceImageUrl(a.card_image_url)} alt={a.card_name} className="w-full h-full object-cover" />
                   )}
                 </div>
                 <div className="p-4">

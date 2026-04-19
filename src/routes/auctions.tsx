@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { games } from "@/config/site";
 import { mockAuctions } from "@/lib/mockAuctions";
+import { getOnePieceImageUrl } from "@/lib/onePieceImage";
 import { Clock, Gavel } from "lucide-react";
 
 type SearchParams = { game?: string };
@@ -112,7 +113,7 @@ function AuctionsPage() {
                   <div className="aspect-[3/4] bg-muted overflow-hidden relative">
                     {a.card_image_url ? (
                       <img
-                        src={a.card_image_url}
+                        src={getOnePieceImageUrl(a.card_image_url)}
                         alt={a.card_name}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                       />

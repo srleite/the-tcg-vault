@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { games } from "@/config/site";
+import { getOnePieceImageUrl } from "@/lib/onePieceImage";
 import { Store, Package, Clock } from "lucide-react";
 
 export const Route = createFileRoute("/shop/$id")({
@@ -140,7 +141,7 @@ function ShopProfilePage() {
                   <div className="aspect-[3/4] bg-muted overflow-hidden">
                     {a.card_image_url && (
                       <img
-                        src={a.card_image_url}
+                        src={getOnePieceImageUrl(a.card_image_url)}
                         alt={a.card_name}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                       />
