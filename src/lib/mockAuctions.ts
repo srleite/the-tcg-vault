@@ -69,9 +69,9 @@ export const mockAuctions: MockAuction[] = [
     game: "onepiece",
     card_name: "Monkey D. Luffy - Líder",
     card_image_url:
-      "https://en.onepiece-cardgame.com/images/cardlist/card/OP01-001.png",
+      "https://en.onepiece-cardgame.com/images/cardlist/card/ST14-001.png?241220",
     description:
-      "Carta líder OP01-001 do set Romance Dawn. Versão alternativa em foil. Excelente estado.",
+      "Carta líder ST14-001 do set -3D2Y-. Versão alternativa em foil. Excelente estado.",
     current_bid: 850,
     starting_price: 400,
     ends_at: inDays(1),
