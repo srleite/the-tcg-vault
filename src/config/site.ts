@@ -15,8 +15,8 @@ export type Game = {
   slug: string;
   name: string;
   tagline: string;
-  /** "scryfall" | "gatcg" | "static" — define qual API usar */
-  api: "scryfall" | "gatcg" | "static";
+  /** "scryfall" | "gatcg" | "onepiece" | "static" — define qual API usar */
+  api: "scryfall" | "gatcg" | "onepiece" | "static";
   /** carta exemplo para preview */
   sampleCard: string;
   color: string;
@@ -43,7 +43,7 @@ export const games: Game[] = [
     slug: "onepiece",
     name: "One Piece TCG",
     tagline: "Rumo ao One Piece",
-    api: "static",
+    api: "onepiece",
     sampleCard: "Monkey D. Luffy",
     color: "oklch(0.6 0.2 25)",
   },
