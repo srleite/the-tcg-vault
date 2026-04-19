@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { games, siteConfig } from "@/config/site";
 import { mockAuctions } from "@/lib/mockAuctions";
+import { getOnePieceImageUrl } from "@/lib/onePieceImage";
 import { Gavel, ShieldCheck, Sparkles, TrendingUp } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -13,10 +14,10 @@ export const Route = createFileRoute("/")({
 
 // Cartas que flutuam no hero (puxadas dos mocks para reutilizar arte)
 const floatingCards = [
-  { src: mockAuctions[0].card_image_url, rotate: -12, x: "5%", y: "10%", delay: 0 },
-  { src: mockAuctions[1].card_image_url, rotate: 8, x: "70%", y: "5%", delay: 0.2 },
-  { src: mockAuctions[2].card_image_url, rotate: -6, x: "82%", y: "55%", delay: 0.4 },
-  { src: mockAuctions[3].card_image_url, rotate: 14, x: "60%", y: "70%", delay: 0.6 },
+  { src: getOnePieceImageUrl(mockAuctions[0].card_image_url), rotate: -12, x: "5%", y: "10%", delay: 0 },
+  { src: getOnePieceImageUrl(mockAuctions[1].card_image_url), rotate: 8, x: "70%", y: "5%", delay: 0.2 },
+  { src: getOnePieceImageUrl(mockAuctions[2].card_image_url), rotate: -6, x: "82%", y: "55%", delay: 0.4 },
+  { src: getOnePieceImageUrl(mockAuctions[3].card_image_url), rotate: 14, x: "60%", y: "70%", delay: 0.6 },
 ];
 
 const fadeUp = {
@@ -167,7 +168,7 @@ function Index() {
                 <Card className="overflow-hidden border-border/60 group-hover:border-gold transition-all shadow-card group-hover:shadow-gold">
                   <div className="aspect-[5/7] overflow-hidden bg-muted">
                     <img
-                      src={a.card_image_url}
+                      src={getOnePieceImageUrl(a.card_image_url)}
                       alt={a.card_name}
                       loading="lazy"
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"

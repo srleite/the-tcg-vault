@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { games } from "@/config/site";
 import { getMockAuction, isMockId } from "@/lib/mockAuctions";
+import { getOnePieceImageUrl } from "@/lib/onePieceImage";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 import { ArrowLeft, Clock, Gavel, TrendingUp } from "lucide-react";
@@ -139,7 +140,7 @@ function AuctionDetailPage() {
           <Card className="overflow-hidden border-gold/30 shadow-card">
             <div className="aspect-[3/4] bg-muted">
               {auction.card_image_url ? (
-                <img src={auction.card_image_url} alt={auction.card_name} className="w-full h-full object-cover" />
+                <img src={getOnePieceImageUrl(auction.card_image_url)} alt={auction.card_name} className="w-full h-full object-cover" />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-muted-foreground">
                   Sem imagem
