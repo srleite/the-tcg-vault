@@ -29,7 +29,6 @@ export function Footer() {
           <h4 className="text-sm font-semibold mb-3 text-gold">Plataforma</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
             <li><Link to="/auctions" className="hover:text-gold">Leilões ativos</Link></li>
-            <li><Link to="/about" className="hover:text-gold">Sobre nós</Link></li>
             <li><Link to="/signup" className="hover:text-gold">Vender no CardLab</Link></li>
           </ul>
         </div>

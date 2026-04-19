@@ -72,9 +72,6 @@ export function Header() {
           <Button variant="ghost" asChild>
             <Link to="/auctions">Leilões</Link>
           </Button>
-          <Button variant="ghost" asChild>
-            <Link to="/about">Sobre</Link>
-          </Button>
         </nav>
 
         <div className="flex items-center gap-2">
