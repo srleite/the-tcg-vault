@@ -1,93 +1,97 @@
 
 
-# Rodar o CardLab localmente com banco de dados
+# Provar persistência em banco de dados real (não local)
 
-Para sua apresentação demonstrando persistência de dados, você tem duas opções viáveis. Vou detalhar a recomendada (mais rápida e idêntica ao que está rodando aqui) e a alternativa (100% local).
+Para sua apresentação, vou te dar **5 provas visuais** que demonstram, sem deixar dúvida, que os dados do CardLab estão num banco PostgreSQL remoto na nuvem — não em localStorage, não em arquivo local, não em memória.
 
 ---
 
-## Opção A — Recomendada: Rodar o frontend local + Lovable Cloud (banco na nuvem)
+## Prova 1 — Dois navegadores, mesma conta, mesmos dados (a mais visual)
 
-Você roda o código React/TanStack na sua máquina, mas continua usando o mesmo banco PostgreSQL que já está configurado no Lovable Cloud. **Toda a persistência (cadastro, login, leilões, lances) já funciona, sem precisar instalar PostgreSQL.**
+**O que fazer:**
+1. Abrir o site em **Chrome** → fazer login como lojista → criar um leilão "Carta XYZ"
+2. Abrir o site em **Firefox** (ou aba anônima) → fazer login com a **mesma conta** → o leilão criado no Chrome aparece imediatamente
+3. Editar/dar lance no Firefox → atualizar a página no Chrome → mudança aparece
 
-### Passo a passo
+**Por que prova:** Chrome e Firefox têm storages totalmente isolados. Se o dado aparece nos dois, **só pode estar vindo de um servidor remoto**.
 
-1. **Baixar o código do projeto**
-   - No topo do editor Lovable, clique no botão do GitHub e exporte o repositório, OU use "Download ZIP".
-   - Extraia em uma pasta na sua máquina.
+---
 
-2. **Instalar pré-requisitos**
-   - Node.js 20+ (https://nodejs.org)
-   - Bun (recomendado, o projeto usa `bunfig.toml` e `bun.lockb`): `npm install -g bun`
-     - Alternativa: usar `npm install` mesmo (funciona).
+## Prova 2 — Dois dispositivos diferentes (impacto máximo)
 
-3. **Criar o arquivo `.env` na raiz**
-   Esse arquivo NÃO vem no download por segurança. Crie manualmente com este conteúdo (são as mesmas chaves públicas que já estão no projeto):
+**O que fazer:**
+1. No notebook: criar um leilão
+2. No celular (mesma rede ou 4G): abrir o site, fazer login, mostrar o leilão lá
 
+**Por que prova:** Dispositivos físicos diferentes não compartilham storage local. Bônus: usar 4G no celular prova que está saindo pra internet.
+
+---
+
+## Prova 3 — Mostrar o painel do banco ao vivo (a mais técnica)
+
+**O que fazer durante a apresentação:**
+1. Abrir o Lovable em outra aba → **Connectors → Lovable Cloud → Tables → `auctions`**
+2. Mostrar a tabela com as linhas existentes
+3. Voltar pro app → criar um leilão novo ao vivo
+4. Voltar pro painel → **F5** → a nova linha aparece com o `id` (UUID), `created_at`, `shop_id` etc.
+5. Mostrar também a tabela `profiles` e `user_roles` com o usuário cadastrado
+
+**Por que prova:** Você está literalmente mostrando o registro SQL no banco PostgreSQL.
+
+---
+
+## Prova 4 — Aba Network do DevTools (prova de rede)
+
+**O que fazer:**
+1. Abrir DevTools (F12) → aba **Network** → filtrar por "supabase"
+2. Recarregar a página de leilões
+3. Mostrar a requisição saindo para `https://fxfzclcokhqfuagqkozo.supabase.co/rest/v1/auctions`
+4. Clicar na requisição → mostrar o JSON de resposta vindo do servidor remoto
+
+**Por que prova:** Mostra o tráfego HTTP saindo da máquina local indo pra nuvem e voltando com os dados.
+
+---
+
+## Prova 5 — Inserir dado direto no banco e ver aparecer no app
+
+**O que fazer:**
+1. No painel do Lovable Cloud → SQL Editor → rodar manualmente:
+   ```sql
+   INSERT INTO auctions (shop_id, game, card_name, starting_price, ends_at)
+   VALUES ('<seu-user-id>', 'magic', 'Carta inserida via SQL', 100, now() + interval '7 days');
    ```
-   VITE_SUPABASE_URL="https://fxfzclcokhqfuagqkozo.supabase.co"
-   VITE_SUPABASE_PUBLISHABLE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ4ZnpjbGNva2hxZnVhZ3Frb3pvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzNTA4OTYsImV4cCI6MjA5MTkyNjg5Nn0.wdVQhPq0y8fgNcBVIDyNx19ZSJE74AqRgjbMzEtAM30"
-   VITE_SUPABASE_PROJECT_ID="fxfzclcokhqfuagqkozo"
-   SUPABASE_URL="https://fxfzclcokhqfuagqkozo.supabase.co"
-   SUPABASE_PUBLISHABLE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ4ZnpjbGNva2hxZnVhZ3Frb3pvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzNTA4OTYsImV4cCI6MjA5MTkyNjg5Nn0.wdVQhPq0y8fgNcBVIDyNx19ZSJE74AqRgjbMzEtAM30"
-   ```
+2. Voltar pro app local → recarregar `/auctions` → a carta aparece
 
-4. **Instalar dependências e rodar**
-   ```
-   bun install
-   bun run dev
-   ```
-   (ou `npm install` + `npm run dev`)
-
-5. **Abrir** http://localhost:3000
-
-### O que você vai conseguir mostrar
-- Cadastrar lojista pela tela `/signup` na sua máquina
-- Fazer login em `/login`
-- Criar um leilão pelo dashboard
-- Ver o leilão aparecer na home/lista de leilões
-- **Provar persistência:** fechar o navegador, reabrir, dados continuam lá
-- **Bônus visual:** abrir uma segunda aba/navegador (Chrome + Firefox) e mostrar que o leilão criado no primeiro aparece também no segundo — prova que está num banco real, não em memória local
+**Por que prova:** O dado nasceu no banco (não no app) e o app local foi buscar lá. Inverte o fluxo e fecha qualquer dúvida.
 
 ---
 
-## Opção B — 100% local com PostgreSQL na sua máquina (mais complexo)
+## Roteiro narrativo sugerido (3 min de apresentação)
 
-Só recomendo se você precisar mostrar literalmente "tudo offline". Exige rodar Supabase via Docker, refazer migrações e gerar novas chaves. Não é trivial e adiciona riscos no dia da apresentação.
-
-Se quiser seguir esse caminho mesmo assim, me avise que eu monto um guia separado com Docker Compose + Supabase CLI.
-
----
-
-## Roteiro sugerido para a apresentação (Opção A)
-
-1. Abrir terminal e mostrar `bun run dev` subindo o servidor local
-2. Abrir `localhost:3000` → home com leilões
-3. Ir em `/signup`, criar conta de lojista ao vivo
-4. Login em `/login`
-5. Dashboard → criar um leilão novo (carta de Magic, por exemplo)
-6. Voltar para `/auctions` → o leilão recém-criado aparece
-7. **Prova de persistência:** F5 na página, fechar aba, reabrir → continua lá
-8. Abrir o painel do Lovable Cloud (Connectors → Lovable Cloud → Tables → `auctions`) e mostrar a linha inserida no banco em tempo real
+```text
+1. "Vou criar um leilão aqui no Chrome..."        [Prova 1, parte A]
+2. "Agora abro o Firefox, mesma conta..."         [Prova 1, parte B]
+3. "Vejam: o leilão está aqui também."
+4. "Pra provar que não é mágica, abro o painel
+    do banco de dados na nuvem..."                [Prova 3]
+5. "Esta é a tabela 'auctions' no PostgreSQL.
+    O leilão que criei está aqui, com UUID,
+    timestamp, e o ID do meu usuário."
+6. "E pra fechar: vou inserir uma carta direto
+    no banco via SQL..."                          [Prova 5]
+7. "Volto pro app, recarrego... apareceu.
+    Os dados vivem no servidor, não na minha máquina."
+```
 
 ---
 
-## Detalhes técnicos
+## Reforço opcional no app (pequena melhoria de código)
 
-- O projeto usa **TanStack Start v1 + Vite 7**, então `bun run dev` (definido no `package.json`) sobe o servidor SSR na porta 3000 por padrão.
-- O cliente Supabase em `src/integrations/supabase/client.ts` lê as variáveis `VITE_SUPABASE_*` em build-time (Vite) e `SUPABASE_*` em runtime (SSR).
-- A chave `VITE_SUPABASE_PUBLISHABLE_KEY` é pública por design (RLS protege o banco), então é seguro versionar/compartilhar.
-- O `SUPABASE_SERVICE_ROLE_KEY` (admin) **não é necessário** para rodar localmente — nenhum fluxo do app o usa hoje.
-- Migrações do banco já estão aplicadas no Lovable Cloud, então não há `supabase db push` a executar.
+Se quiser deixar **ainda mais claro visualmente durante a demo**, posso adicionar no Dashboard um pequeno indicador discreto tipo:
 
----
+> 🟢 Conectado ao banco · `fxfzclcokhqfuagqkozo.supabase.co` · 12 leilões carregados
 
-## Possíveis problemas e soluções
+Isso mostra ao vivo que o app está falando com um servidor remoto identificável. É uma alteração pequena (uns 15 minutos), só no `src/routes/dashboard.tsx`.
 
-| Problema | Causa | Solução |
-|---|---|---|
-| `bun: command not found` | Bun não instalado | Use `npm install` + `npm run dev` |
-| Erro "Missing Supabase environment variables" | `.env` ausente ou mal formado | Conferir o passo 3, sem espaços ao redor do `=` |
-| Página em branco / erro CORS | Domínio local não autorizado | Já funciona — `localhost` está permitido por padrão no Supabase |
-| Porta 3000 ocupada | Outro app rodando | Mate o processo ou rode `PORT=3001 bun run dev` |
+**Me diz se quer essa adição** ou se as 5 provas acima já bastam — nesse caso é só seguir o roteiro, nenhuma mudança de código é necessária.
 
