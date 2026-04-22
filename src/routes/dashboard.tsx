@@ -18,6 +18,10 @@ import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 import { Plus, Search, Trash2 } from "lucide-react";
 
+const SUPABASE_HOST = (import.meta.env.VITE_SUPABASE_URL || "")
+  .replace(/^https?:\/\//, "")
+  .replace(/\/$/, "");
+
 export const Route = createFileRoute("/dashboard")({
   component: DashboardPage,
 });
@@ -121,6 +125,13 @@ function DashboardPage() {
           <div>
             <h1 className="font-display text-3xl font-bold">Painel da Loja</h1>
             <p className="text-muted-foreground text-sm mt-1">{user.email}</p>
+            <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-live/40 bg-live/10 px-3 py-1 text-xs font-mono text-live">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-live opacity-75"></span>
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-live"></span>
+              </span>
+              Conectado ao banco · {SUPABASE_HOST || "remoto"} · {auctions.length} leilõe{auctions.length === 1 ? "" : "s"} carregado{auctions.length === 1 ? "" : "s"}
+            </div>
           </div>
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>

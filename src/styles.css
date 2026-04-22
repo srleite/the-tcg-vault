@@ -30,6 +30,8 @@
   --color-ring: var(--ring);
   --color-gold: var(--gold);
   --color-gold-foreground: var(--gold-foreground);
+  --color-live: var(--live);
+  --color-live-foreground: var(--live-foreground);
   --font-display: "Space Grotesk", sans-serif;
   --font-body: "Inter", sans-serif;
 }
@@ -61,6 +63,9 @@
 
   --gold: oklch(0.82 0.14 85);
   --gold-foreground: oklch(0.18 0.07 295);
+
+  --live: oklch(0.72 0.18 150);
+  --live-foreground: oklch(0.18 0.07 295);
 
   --destructive: oklch(0.6 0.22 25);
   --destructive-foreground: oklch(0.98 0.01 90);
