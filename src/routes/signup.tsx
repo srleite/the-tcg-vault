@@ -27,10 +27,13 @@ function SignupPage() {
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const meta: Record<string, string> = { display_name: name };
+    const meta: Record<string, string> = {
+      display_name: name,
+      role: tab, // "user" ou "shop" — lido pelo trigger handle_new_user no banco
+    };
     if (tab === "shop") meta.shop_name = shopName;
 
-    const { data, error } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -45,13 +48,8 @@ function SignupPage() {
       return;
     }
 
-    if (data.user) {
-      // assign role
-      await supabase.from("user_roles").insert({
-        user_id: data.user.id,
-        role: tab === "shop" ? "shop" : "user",
-      });
-    }
+    // O role e o profile são criados automaticamente pelo trigger
+    // handle_new_user() no banco — não precisa inserir do client.
 
     setLoading(false);
     toast.success("Conta criada! Você já pode entrar.");
