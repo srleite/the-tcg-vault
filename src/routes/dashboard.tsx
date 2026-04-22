@@ -125,6 +125,13 @@ function DashboardPage() {
           <div>
             <h1 className="font-display text-3xl font-bold">Painel da Loja</h1>
             <p className="text-muted-foreground text-sm mt-1">{user.email}</p>
+            <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-mono text-emerald-600 dark:text-emerald-400">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-75"></span>
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
+              </span>
+              Conectado ao banco · {SUPABASE_HOST || "remoto"} · {auctions.length} leilõe{auctions.length === 1 ? "" : "s"} carregado{auctions.length === 1 ? "" : "s"}
+            </div>
           </div>
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
