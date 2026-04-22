@@ -18,6 +18,10 @@ import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 import { Plus, Search, Trash2 } from "lucide-react";
 
+const SUPABASE_HOST = (import.meta.env.VITE_SUPABASE_URL || "")
+  .replace(/^https?:\/\//, "")
+  .replace(/\/$/, "");
+
 export const Route = createFileRoute("/dashboard")({
   component: DashboardPage,
 });
