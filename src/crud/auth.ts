@@ -36,18 +36,15 @@ export async function signUp(input: SignUpInput) {
       data: {
         display_name: input.displayName,
         shop_name: input.role === "shop" ? input.shopName : null,
+        role: input.role, // lido pelo trigger handle_new_user no banco
       },
     },
   });
   if (error) throw error;
 
-  // Atribui a role escolhida (default da migração é "user")
-  if (data.user) {
-    await supabase.from("user_roles").insert({
-      user_id: data.user.id,
-      role: input.role,
-    });
-  }
+  // O profile e o user_role são criados automaticamente pelo trigger
+  // handle_new_user() em auth.users — não inserir do client (RLS bloqueia
+  // antes da sessão estar ativa).
   return data;
 }
 
