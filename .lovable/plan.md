@@ -1,55 +1,67 @@
-# Plano: Diagramas DER e de Classes (PDF único)
+# Diagramas de Sequência — CardLab
 
-Gerar **um arquivo `.pdf`** em `/mnt/documents/` contendo duas páginas:
-
-1. **Diagrama Entidade-Relacionamento (DER)** — notação Crow's Foot
-2. **Diagrama de Classes (UML)** — classes com atributos, tipos e métodos
-
-Escopo inclui o estado atual do banco **+ entidades futuras** (Lances e ator Comprador).
+Gerar **um único PDF** em `/mnt/documents/diagramas_sequencia.pdf` com dois diagramas de sequência UML, um para cada caso de uso enviado, mais uma breve seção-guia sobre **como/onde criar** esse tipo de diagrama.
 
 ---
 
-## Página 1 — DER
+## Página 1 — Sequência: Gerenciar Perfil
 
-Entidades e relacionamentos:
+Atores/objetos (linhas de vida, da esquerda p/ direita):
 
-- **auth_users** (id, email) — gerenciada pelo Supabase
-- **profiles** (id PK/FK→auth_users, display_name, shop_name, created_at)
-- **user_roles** (id PK, user_id FK→auth_users, role: enum {admin, shop, user})
-- **auctions** (id PK, shop_id FK→auth_users, game, card_name, card_image_url, description, starting_price, current_bid, ends_at, created_at)
-- **bids** *(futuro)* (id PK, auction_id FK→auctions, buyer_id FK→auth_users, amount, created_at)
+`Usuário` → `ProfilePage (UI)` → `AuthService` → `ProfilesCRUD` → `Supabase (DB + RLS)`
 
-Cardinalidades:
-- auth_users (1) ──── (1) profiles
-- auth_users (1) ──── (N) user_roles
-- auth_users (1) ──── (N) auctions  *(como lojista)*
-- auctions   (1) ──── (N) bids
-- auth_users (1) ──── (N) bids       *(como comprador)*
+Mensagens (fluxo principal + subfluxos como `alt`):
 
-Atributo derivado destacado: `auctions.current_bid` = MAX(bids.amount).
+1. Usuário → UI: acessar "Meu Perfil"
+2. UI → AuthService: getCurrentUser()
+3. **alt** [não autenticado] → redirect `/login` (subfluxo 3.1)
+4. UI → ProfilesCRUD: getProfile(userId)
+5. ProfilesCRUD → DB: SELECT * FROM profiles WHERE id = uid
+6. DB → UI: dados do perfil
+7. Usuário → UI: edita campos + "Salvar"
+8. UI → UI: valida (não vazio, tamanho máx.)  — **alt** inválido → erro (3.2)
+9. UI → ProfilesCRUD: updateProfile(userId, patch)
+10. ProfilesCRUD → DB: UPDATE profiles ... (RLS: auth.uid() = id)
+11. **alt** [erro de rede/RLS] → toast erro, mantém form (3.3)
+12. DB → UI: ok → toast "Perfil atualizado"
 
-## Página 2 — Diagrama de Classes (UML)
+## Página 2 — Sequência: Gerenciar Cartas (criar leilão — fluxo principal)
 
-Classes correspondentes às entidades + serviços do código (`src/crud/*`):
+Linhas de vida:
 
-- **Profile** { id, displayName, shopName, createdAt; +update() }
-- **UserRole** «enum» { admin, shop, user } e classe **RoleAssignment** { userId, role }
-- **Auction** { id, shopId, game, cardName, cardImageUrl, description, startingPrice, currentBid, endsAt; +placeBid(), +update(), +delete() }
-- **Bid** *(futuro)* { id, auctionId, buyerId, amount, createdAt }
-- **AuthService** { signUp(), signIn(), signOut(), getCurrentUser(), hasRole() }
-- Atores externos: **Lojista**, **Comprador**
+`Lojista` → `Dashboard (UI)` → `CardAPI (externa)` → `AuctionsCRUD` → `Supabase (DB + RLS)`
 
-Relações:
-- Profile 1—1 AuthUser
-- AuthUser 1—* RoleAssignment
-- AuthUser (Lojista) 1—* Auction
-- Auction 1—* Bid
-- AuthUser (Comprador) 1—* Bid
-- AuthService ..> AuthUser «usa»
+1. Lojista → UI: clica "Novo Leilão"
+2. UI → UI: abre modal com formulário
+3. Lojista → UI: escolhe jogo + digita nome + "Buscar"
+4. UI → CardAPI: searchCards(game, query)
+5. **alt** [API falha] → aviso + permitir nova busca (4.5); [vazio] → "Nenhuma carta encontrada" (4.4)
+6. CardAPI → UI: lista de cartas (miniaturas)
+7. Lojista → UI: seleciona carta + preenche descrição/preço/dias + "Publicar"
+8. UI → UI: valida (preço>0, dias 1–30, carta selecionada)
+9. UI → AuctionsCRUD: createAuction(payload)
+10. AuctionsCRUD → DB: INSERT INTO auctions (RLS: role 'shop')
+11. **alt** [sem role] → "Permissão negada" (4.6); [sessão expirada] → redirect login (4.7)
+12. DB → UI: leilão criado → fecha modal, recarrega lista
 
-## Detalhes técnicos
+Notas no rodapé do diagrama referenciando fluxos alternativos 4.2 (editar) e 4.3 (remover) como variações reutilizando `AuctionsCRUD.updateAuction` / `deleteAuction`.
 
-- Renderização com **matplotlib** (mesmo estilo dos casos de uso anteriores: fundo `#fdf6e3`, retângulos, linhas Crow's Foot manuais, fontes serifadas).
-- Salvar duas figuras como páginas e combinar via `matplotlib.backends.backend_pdf.PdfPages`.
-- QA: converter PDF em imagens com `pdftoppm` e inspecionar cada página antes de entregar.
-- Saída final: `/mnt/documents/diagramas_der_classes.pdf` + tag `<presentation-artifact>`.
+## Página 3 — Guia rápido: como e onde fazer
+
+- **O que é**: diagrama UML que mostra a troca de mensagens **no tempo** entre atores e objetos (linhas de vida verticais, setas horizontais, blocos `alt`/`opt`/`loop`).
+- **Ferramentas recomendadas** (todas gratuitas):
+  - **PlantUML** (texto → diagrama, ótimo p/ versionar no Git). Editor online: plantuml.com/plantuml
+  - **Mermaid** (`sequenceDiagram`) — renderiza direto no GitHub/Notion
+  - **draw.io / diagrams.net** — arrastar e soltar, exporta PDF/PNG
+  - **Lucidchart** — colaborativo (versão free limitada)
+  - **StarUML / Visual Paradigm** — desktop, mais "acadêmico"
+- **Recomendação p/ o TCC**: PlantUML — você cola o texto, gera PNG/PDF, e o arquivo `.puml` fica versionado. Incluirei no PDF os dois trechos `.puml` prontos p/ copiar-colar.
+
+## Detalhes técnicos da geração
+
+- Renderização com **matplotlib** (mesmo estilo dos diagramas anteriores: fundo `#fdf6e3`, fontes serifadas), 3 páginas combinadas via `PdfPages`.
+- Setas sólidas → chamadas síncronas; tracejadas → retornos. Caixas `alt` em retângulo pontilhado englobando alternativas.
+- QA obrigatório: `pdftoppm` em cada página e inspeção visual antes de entregar.
+- Entrega: `<presentation-artifact>` apontando p/ `diagramas_sequencia.pdf`.
+
+Posso seguir e gerar?
